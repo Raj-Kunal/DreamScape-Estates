@@ -1,3 +1,4 @@
+dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
@@ -6,7 +7,6 @@ import authRouter from './routes/auth.route.js';
 import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
-dotenv.config();
 
 mongoose
   .connect(process.env.MONGO)
@@ -29,12 +29,18 @@ app.listen(3000, () => {
   console.log('Server is running on port 3000!');
 });
 
+
+app.get("/api/test", (req, res) => {
+  return res.status(200).json({message: "good to go..."});
+})
+
+
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/listing', listingRouter);
 
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
+app.use(express.static(path.resolve(__dirname, 'client', 'dist')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
